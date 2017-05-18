@@ -55,6 +55,14 @@ create type fhir.ContactPoint as (
   period text
 );
 
+create type fhir.Duration as (
+  value decimal,
+  comparator text,
+  unit text,
+  system text,
+  code text
+)
+
 create type fhir.HumanName as (
   use text,
   text text,
@@ -94,6 +102,11 @@ create type fhir.Meta as (
   tag text
 );
 
+create type fhir.Nutrient as (
+  modifier text,
+  amount text
+)
+
 create type fhir.Period as (
   start text, --date
   "end" text --date -- postgres reserved key word
@@ -117,6 +130,28 @@ create type fhir.Ratio as (
   demoninator text
 );
 
+--Repeat element
+create type fhir.Repeat as (
+  boundsDuration text,
+  boundsRange text,
+  boundsPeriod text,
+  count integer,
+  countMax integer,
+  duration decimal,
+  durationMax decimal,
+  durationUnit text, --code
+  fequency integer,
+  frequencyMax integer,
+  period decimal,
+  periodMax decimal,
+  periodUnit text, --code
+  dayOfWeek text[], --code
+  timeOfDay time[], --code
+  when text, -- code,
+  offset text, --code
+)
+
+
 create type fhir.SampleData as (
   origin text,
   Period decimal,
@@ -134,11 +169,23 @@ create type fhir.SimpleQuantity as (
   code text
 );
 
+create type fhir.Timing as (
+  event text, --date
+  repeat text,
+  code text
+)
+
+
 create type fhir.Reference as (
   reference text,
   identifier text,
   display text
 );
+
+create type fhir.Texture as (
+  modifier text,
+  foodType text
+)
 
 create type fhir.Use as enum (
   'usual',
@@ -159,6 +206,8 @@ ALTER TYPE fhir.CodeableConcept ALTER ATTRIBUTE Coding TYPE fhir.Coding[];
 
 ALTER TYPE fhir.ContactPoint ALTER ATTRIBUTE Period TYPE fhir.Period;
 
+--ALTER TYPE fhir.Duration ALTER ATTRIBUTE Comparator TYPE fhir.Comparator;
+
 ALTER TYPE fhir.HumanName ALTER ATTRIBUTE Use TYPE fhir.Use;
 ALTER TYPE fhir.HumanName ALTER ATTRIBUTE Period TYPE fhir.Period;
 
@@ -169,6 +218,9 @@ ALTER TYPE fhir.Identifier ALTER ATTRIBUTE Type TYPE fhir.CodeableConcept;
 ALTER TYPE fhir.Meta ALTER ATTRIBUTE Security TYPE fhir.Coding[];
 ALTER TYPE fhir.Meta ALTER ATTRIBUTE Tag TYPE fhir.Coding[];
 
+ALTER TYPE fhir.Nutrient ALTER ATTRIBUTE Modifier TYPE fhir.CodeableConcept;
+ALTER TYPE fhir.Nutrient ALTER ATTRIBUTE Amount TYPE fhir.SimpleQuantity;
+
 ALTER TYPE fhir.Quantity ALTER ATTRIBUTE Comparator TYPE fhir.QauntityComparator;
 
 ALTER TYPE fhir.Range ALTER ATTRIBUTE Low TYPE fhir.Low;
@@ -177,12 +229,21 @@ ALTER TYPE fhir.Range ALTER ATTRIBUTE High TYPE fhir.High;
 ALTER TYPE fhir.Ratio ALTER ATTRIBUTE Numerator TYPE fhir.Quantity;
 ALTER TYPE fhir.Ratio ALTER ATTRIBUTE Demoninator TYPE fhir.Quantity;
 
+--element
+ALTER TYPE fhir.Repeat ALTER ATTRIBUTE boundsDuration TYPE fhir.Duration;
+ALTER TYPE fhir.Repeat ALTER ATTRIBUTE boundsRange TYPE fhir.Range;
+ALTER TYPE fhir.Repeat ALTER ATTRIBUTE boundsRange TYPE fhir.Period;
+
 --Problem with circular reference 
 --Reference is in Idenifier and Idenifier is in Reference
 --ALTER TYPE fhir.reference ALTER ATTRIBUTE identifier TYPE fhir.Identifier;
 
 ALTER TYPE fhir.SampleData ALTER ATTRIBUTE Origin TYPE fhir.SimpleQuantity;
 
+ALTER TYPE fhir.Texture ALTER ATTRIBUTE Modifier TYPE fhir.CodeableConcept;
+ALTER TYPE fhir.Texture ALTER ATTRIBUTE FoodType TYPE fhir.CodeableConcept;
+
+ALTER TYPE fhir.Timing ALTER ATTRIBUTE Repeat TYPE fhir.Repeat;
 
 --Patient
 create table fhir.Patient (
@@ -292,23 +353,22 @@ ALTER TABLE fhir.Patient ALTER COLUMN meta TYPE fhir.Meta USING meta::fhir.Meta;
 create table fhir.NutritionOrder (
   nutrition_order_id           serial primary key,
 
-  identifier                   text,
-  active                       boolean,
-  name                         text
-  telecom: [ContactPoint]
-  gender: Gender
-  birthDate: String
-  decreased: Boolean
-  address: [Address]
-  maritalStatus: [CodeableConcept]
-  multipleBirth: Int
-  photo: [Attachment]
-  contact: [Contact]
-  animal: Animal
-  communication: [Communication]
-  generalPractitioner: [Reference]
-  managingOrganization: [Reference]
-  link: [Link]
+  
+ status text,
+patient text,
+encounter text,
+dateTime text, --date
+orderer text,
+allergyIntolerance text,
+foodPreferenceModofier text,
+excludeFoodModifier text,
+oralDiet text,
+supplememt text,
+enteralFormula text
+
+
+
+
   id                   text, --start
   fullUrl              text,
   resourceType         text,
@@ -318,6 +378,7 @@ create table fhir.NutritionOrder (
 ALTER TABLE fhir.nutritionOrder ALTER COLUMN identifier TYPE fhir.Identifier[] USING identifier::fhir.Identifier[];
 ALTER TABLE fhir.nutritionOrder ALTER COLUMN name TYPE fhir.HumanName[] USING name::fhir.HumanName[];
 
+ALTER TABLE fhir.nutritionOrder ALTER COLUMN name TYPE fhir.HumanName[] USING name::fhir.HumanName[];
 
 
 commit;
