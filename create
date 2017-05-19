@@ -1,0 +1,31 @@
+h=host
+d=database
+U=user
+p=port
+f=file
+a=?
+q=?
+
+psql -h localhost -d ncp -U nosh -p 5432 -a -q -f schema.sql 
+
+
+postgraphql \
+  --connection postgres://nosh:p@localhost:5432/fhir \
+  --schema fhir \
+  --export-schema-graphql /home/nosh/Desktop/schema.graphql
+  --classic-ids
+
+  --export-schema-json /home/nosh/Desktop/schema.json
+
+  --classic-ids #relay 1
+  --export-schema-graphql /home/nosh/Desktop/schema.graphql
+
+
+Multiple files, but doesn't work
+gql-gen --file schema.json --template typescript --out ./typings/ ./src/**/*.ts
+gql-gen --file schema.json --template flow --out ./typings/ ./src/**/*.ts
+
+
+
+Single file
+gql-gen --file schema.json --template typescript --out schema.ts

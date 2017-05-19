@@ -16,6 +16,30 @@ create type fhir.Address as (
   period text
 );
 
+create type fhir.Age as (
+  value decimal,
+  comparator text, --code
+  unit text,
+  system text,
+  code text
+);
+
+--Adminstration - element to EnteralFormula
+create type fhir.Administration as (
+  schedule text,
+  quantity text,
+  rateQuantity text,
+  rateRatio text
+);
+
+create type fhir.Annotation as (
+  authorReference text,
+  authorString text,
+  time text, --date
+  text text
+);
+
+
 create type fhir.Attachment as (
   contentType text,
   language text,
@@ -40,13 +64,6 @@ create type fhir.Coding as (
   userSelected boolean
 );
 
-create type fhir.QuantityComparator as enum (
-  '<',
-  '<=',
-  '>=',
-  '>'
-);
-
 create type fhir.ContactPoint as (
   system text,
   value text,
@@ -61,7 +78,18 @@ create type fhir.Duration as (
   unit text,
   system text,
   code text
-)
+);
+
+create type fhir.EnteralFormula as (
+  baseFormulaType text,
+  baseFormalProductName text,
+  additiveType text,
+  caloricDensity text,
+  routeOfAdministration text,
+  administration text,
+  maxVolumeToDeliver text,
+  administrationInstruction text
+);
 
 create type fhir.HumanName as (
   use text,
@@ -87,6 +115,7 @@ create type fhir.Identifier as (
   Period text,
   assigner text
 );
+
 create type fhir.Low as (
   value decimal,
   unit text,
@@ -105,7 +134,16 @@ create type fhir.Meta as (
 create type fhir.Nutrient as (
   modifier text,
   amount text
-)
+);
+
+create type fhir.OralDiet as (
+  type text,
+  schedule text, 
+  nutrient text[],
+  texture text,
+  fluidConsistencyType text,
+  instruction text
+);
 
 create type fhir.Period as (
   start text, --date
@@ -120,6 +158,13 @@ create type fhir.Quantity as (
   code text 
 );
 
+create type fhir.QuantityComparator as enum (
+  '<',
+  '<=',
+  '>=',
+  '>'
+);
+
 create type fhir.Range as (
   low text,
   high text
@@ -130,7 +175,7 @@ create type fhir.Ratio as (
   demoninator text
 );
 
---Repeat element
+--Repeat - element for Timing
 create type fhir.Repeat as (
   boundsDuration text,
   boundsRange text,
@@ -147,10 +192,9 @@ create type fhir.Repeat as (
   periodUnit text, --code
   dayOfWeek text[], --code
   timeOfDay time[], --code
-  when text, -- code,
-  offset text, --code
-)
-
+  "when" text[], -- code --reserved word
+  "offset" text --code --reserved word
+);
 
 create type fhir.SampleData as (
   origin text,
@@ -169,12 +213,30 @@ create type fhir.SimpleQuantity as (
   code text
 );
 
+create type fhir.Supplement as (
+  type text,
+  productName text,
+  schedule text,
+  quantity text,
+  instruction text
+);
+
 create type fhir.Timing as (
   event text, --date
   repeat text,
   code text
-)
+);
 
+
+create type fhir.Reaction as (
+  substance text,
+  manifestation text,
+  description text,
+  onset text, --date
+  severity text,
+  exposureRoute text,
+  note text
+);
 
 create type fhir.Reference as (
   reference text,
@@ -185,7 +247,7 @@ create type fhir.Reference as (
 create type fhir.Texture as (
   modifier text,
   foodType text
-)
+);
 
 create type fhir.Use as enum (
   'usual',
@@ -202,13 +264,27 @@ create type fhir.Use as enum (
 
 ALTER TYPE fhir.Address ALTER ATTRIBUTE Period TYPE fhir.Period;
 
+ALTER TYPE fhir.Administration ALTER ATTRIBUTE schedule TYPE fhir.Timing;
+ALTER TYPE fhir.Administration ALTER ATTRIBUTE quantity TYPE fhir.SimpleQuantity;
+ALTER TYPE fhir.Administration ALTER ATTRIBUTE rateQuantity TYPE fhir.SimpleQuantity;
+ALTER TYPE fhir.Administration ALTER ATTRIBUTE rateRatio TYPE fhir.Ratio;
+
+ALTER TYPE fhir.Annotation ALTER ATTRIBUTE authorReference TYPE fhir.Reference;
+
 ALTER TYPE fhir.CodeableConcept ALTER ATTRIBUTE Coding TYPE fhir.Coding[];
 
 ALTER TYPE fhir.ContactPoint ALTER ATTRIBUTE Period TYPE fhir.Period;
 
+ALTER TYPE fhir.EnteralFormula ALTER ATTRIBUTE baseFormulaType TYPE fhir.CodeableConcept;
+ALTER TYPE fhir.EnteralFormula ALTER ATTRIBUTE additiveType TYPE fhir.CodeableConcept;
+ALTER TYPE fhir.EnteralFormula ALTER ATTRIBUTE caloricDensity TYPE fhir.SimpleQuantity;
+ALTER TYPE fhir.EnteralFormula ALTER ATTRIBUTE routeOfAdministration TYPE fhir.CodeableConcept;
+ALTER TYPE fhir.EnteralFormula ALTER ATTRIBUTE administration TYPE fhir.Administration[];
+ALTER TYPE fhir.EnteralFormula ALTER ATTRIBUTE maxVolumeToDeliver TYPE fhir.SimpleQuantity;
+
 --ALTER TYPE fhir.Duration ALTER ATTRIBUTE Comparator TYPE fhir.Comparator;
 
-ALTER TYPE fhir.HumanName ALTER ATTRIBUTE Use TYPE fhir.Use;
+--ALTER TYPE fhir.HumanName ALTER ATTRIBUTE Use TYPE fhir.Use;
 ALTER TYPE fhir.HumanName ALTER ATTRIBUTE Period TYPE fhir.Period;
 
 ALTER TYPE fhir.Identifier ALTER ATTRIBUTE Assigner TYPE fhir.Reference;
@@ -221,7 +297,13 @@ ALTER TYPE fhir.Meta ALTER ATTRIBUTE Tag TYPE fhir.Coding[];
 ALTER TYPE fhir.Nutrient ALTER ATTRIBUTE Modifier TYPE fhir.CodeableConcept;
 ALTER TYPE fhir.Nutrient ALTER ATTRIBUTE Amount TYPE fhir.SimpleQuantity;
 
-ALTER TYPE fhir.Quantity ALTER ATTRIBUTE Comparator TYPE fhir.QauntityComparator;
+ALTER TYPE fhir.OralDiet ALTER ATTRIBUTE type TYPE fhir.CodeableConcept[];
+ALTER TYPE fhir.OralDiet ALTER ATTRIBUTE schedule TYPE fhir.Timing[];
+ALTER TYPE fhir.OralDiet ALTER ATTRIBUTE nutrient TYPE fhir.Nutrient[];
+ALTER TYPE fhir.OralDiet ALTER ATTRIBUTE texture TYPE fhir.Texture[];
+ALTER TYPE fhir.OralDiet ALTER ATTRIBUTE fluidConsistencyType TYPE fhir.CodeableConcept[];
+
+--ALTER TYPE fhir.Quantity ALTER ATTRIBUTE Comparator TYPE fhir.QuantityComparator;
 
 ALTER TYPE fhir.Range ALTER ATTRIBUTE Low TYPE fhir.Low;
 ALTER TYPE fhir.Range ALTER ATTRIBUTE High TYPE fhir.High;
@@ -229,7 +311,13 @@ ALTER TYPE fhir.Range ALTER ATTRIBUTE High TYPE fhir.High;
 ALTER TYPE fhir.Ratio ALTER ATTRIBUTE Numerator TYPE fhir.Quantity;
 ALTER TYPE fhir.Ratio ALTER ATTRIBUTE Demoninator TYPE fhir.Quantity;
 
---element
+--Reaction - element to AllergyIntolerance
+ALTER TYPE fhir.Reaction ALTER ATTRIBUTE substance TYPE fhir.CodeableConcept;
+ALTER TYPE fhir.Reaction ALTER ATTRIBUTE manifestation TYPE fhir.CodeableConcept;
+ALTER TYPE fhir.Reaction ALTER ATTRIBUTE exposureRoute TYPE fhir.CodeableConcept;
+ALTER TYPE fhir.Reaction ALTER ATTRIBUTE note TYPE fhir.Annotation;
+
+--Repeat - element for Timing
 ALTER TYPE fhir.Repeat ALTER ATTRIBUTE boundsDuration TYPE fhir.Duration;
 ALTER TYPE fhir.Repeat ALTER ATTRIBUTE boundsRange TYPE fhir.Range;
 ALTER TYPE fhir.Repeat ALTER ATTRIBUTE boundsRange TYPE fhir.Period;
@@ -240,10 +328,16 @@ ALTER TYPE fhir.Repeat ALTER ATTRIBUTE boundsRange TYPE fhir.Period;
 
 ALTER TYPE fhir.SampleData ALTER ATTRIBUTE Origin TYPE fhir.SimpleQuantity;
 
+ALTER TYPE fhir.Supplement ALTER ATTRIBUTE type TYPE fhir.CodeableConcept[];
+ALTER TYPE fhir.Supplement ALTER ATTRIBUTE schedule TYPE fhir.Timing[];
+ALTER TYPE fhir.Supplement ALTER ATTRIBUTE quantity TYPE fhir.SimpleQuantity;
+
 ALTER TYPE fhir.Texture ALTER ATTRIBUTE Modifier TYPE fhir.CodeableConcept;
 ALTER TYPE fhir.Texture ALTER ATTRIBUTE FoodType TYPE fhir.CodeableConcept;
 
 ALTER TYPE fhir.Timing ALTER ATTRIBUTE Repeat TYPE fhir.Repeat;
+
+
 
 --Patient
 create table fhir.Patient (
@@ -286,7 +380,7 @@ ALTER TABLE fhir.Patient ALTER COLUMN meta TYPE fhir.Meta USING meta::fhir.Meta;
 
 --Observation
 create table fhir.Observation (
-  observation_id           serial primary key, 
+  observation_id       serial primary key, 
 
   identifier           text,
   basedOn              text,
@@ -327,7 +421,6 @@ create table fhir.Observation (
   meta                 text
 );
 
-
 ALTER TABLE fhir.observation ALTER COLUMN identifier TYPE fhir.Identifier[] USING identifier::fhir.Identifier[];
 ALTER TABLE fhir.observation ALTER COLUMN basedOn TYPE fhir.Reference[] USING basedOn::fhir.Reference[];
 ALTER TABLE fhir.observation ALTER COLUMN category TYPE fhir.CodeableConcept[] USING category::fhir.CodeableConcept[];
@@ -349,25 +442,32 @@ ALTER TABLE fhir.observation ALTER COLUMN device TYPE fhir.Reference USING devic
 
 ALTER TABLE fhir.Patient ALTER COLUMN meta TYPE fhir.Meta USING meta::fhir.Meta;
 
---NutritionOrder
-create table fhir.NutritionOrder (
-  nutrition_order_id           serial primary key,
-
-  
- status text,
-patient text,
-encounter text,
-dateTime text, --date
-orderer text,
-allergyIntolerance text,
-foodPreferenceModofier text,
-excludeFoodModifier text,
-oralDiet text,
-supplememt text,
-enteralFormula text
 
 
 
+--AllergyIntolerance
+create table fhir.AllergryIntolerance (
+  allergy_intolerance_id  serial primary key, 
+
+  identifier              text,
+  clinicalStatus          text, --code
+  verificationStatus      text, --code
+  type                    text, --code
+  category                text, --code
+  criticality             text, --code
+  code                    text,
+  patient                 text,
+  onsetDateTime           text, --date
+  onsetAge                text,
+  onsetPeriod             text,
+  onsetRange              text,
+  onsetString             text,
+  assertedDate            text,
+  recorder                text,
+  aserter                 text,
+  lastOccurrence          text, --date
+  note                    text,
+  reaction                text,
 
   id                   text, --start
   fullUrl              text,
@@ -375,10 +475,59 @@ enteralFormula text
   meta                 text
 );
 
-ALTER TABLE fhir.nutritionOrder ALTER COLUMN identifier TYPE fhir.Identifier[] USING identifier::fhir.Identifier[];
-ALTER TABLE fhir.nutritionOrder ALTER COLUMN name TYPE fhir.HumanName[] USING name::fhir.HumanName[];
+ALTER TABLE fhir.AllergryIntolerance ALTER COLUMN identifier TYPE fhir.Identifier[] USING identifier::fhir.identifier[];
+ALTER TABLE fhir.AllergryIntolerance ALTER COLUMN code TYPE fhir.CodeableConcept USING code::fhir.CodeableConcept;
+--ALTER TABLE fhir.AllergryIntolerance ALTER COLUMN patient TYPE fhir.Patient USING patient::fhir.Patient;
 
-ALTER TABLE fhir.nutritionOrder ALTER COLUMN name TYPE fhir.HumanName[] USING name::fhir.HumanName[];
+ALTER TABLE fhir.AllergryIntolerance ALTER COLUMN onsetAge TYPE fhir.Age USING onsetAge::fhir.Age;
+ALTER TABLE fhir.AllergryIntolerance ALTER COLUMN onsetPeriod TYPE fhir.Period USING onsetPeriod::fhir.Period;
+ALTER TABLE fhir.AllergryIntolerance ALTER COLUMN onsetRange TYPE fhir.Range USING onsetRange::fhir.Range;
+
+ALTER TABLE fhir.AllergryIntolerance ALTER COLUMN recorder TYPE fhir.Reference USING recorder::fhir.Reference;
+ALTER TABLE fhir.AllergryIntolerance ALTER COLUMN aserter TYPE fhir.Reference USING aserter::fhir.Reference;
+
+ALTER TABLE fhir.AllergryIntolerance ALTER COLUMN note TYPE fhir.Annotation USING note::fhir.Annotation;
+ALTER TABLE fhir.AllergryIntolerance ALTER COLUMN reaction TYPE fhir.Reaction USING reaction::fhir.Reaction;
+
+
+
+--NutritionOrder
+create table fhir.NutritionOrder (
+  nutrition_order_id     serial primary key,
+  
+  identifier             text,
+  status                 text,
+  patient                text,
+  --encounter              text,
+  dateTime               text, --date
+  orderer                text,
+  allergyIntolerance     text,
+  foodPreferenceModifier text,
+  excludeFoodModifier    text,
+  oralDiet               text,
+  supplememt             text,
+  enteralFormula         text,
+
+  id                     text, --start
+  fullUrl                text,
+  resourceType           text,
+  meta                   text
+);
+
+ALTER TABLE fhir.nutritionOrder ALTER COLUMN identifier TYPE fhir.Identifier[] USING identifier::fhir.Identifier[];
+--ALTER TABLE fhir.nutritionOrder ALTER COLUMN patient TYPE fhir.Patient USING patient::fhir.Patient;
+--ALTER TABLE fhir.nutritionOrder ALTER COLUMN encounter TYPE fhir.Encounter USING name::fhir.Encounter;
+ALTER TABLE fhir.nutritionOrder ALTER COLUMN orderer TYPE fhir.Reference USING orderer::fhir.Reference;
+--ALTER TABLE fhir.nutritionOrder ALTER COLUMN allergyIntolerance TYPE fhir.AllergryIntolerance USING allergyIntolerance::fhir.AllergryIntolerance;
+ALTER TABLE fhir.nutritionOrder ALTER COLUMN foodPreferenceModifier TYPE fhir.CodeableConcept USING foodPreferenceModifier::fhir.CodeableConcept;
+ALTER TABLE fhir.nutritionOrder ALTER COLUMN excludeFoodModifier TYPE fhir.CodeableConcept USING excludeFoodModifier::fhir.CodeableConcept;
+ALTER TABLE fhir.nutritionOrder ALTER COLUMN oralDiet TYPE fhir.OralDiet USING oralDiet::fhir.OralDiet;
+ALTER TABLE fhir.nutritionOrder ALTER COLUMN supplememt TYPE fhir.Supplement USING supplememt::fhir.Supplement;
+ALTER TABLE fhir.nutritionOrder ALTER COLUMN enteralFormula TYPE fhir.EnteralFormula USING enteralFormula::fhir.EnteralFormula;
+
+ALTER TABLE fhir.nutritionOrder ALTER COLUMN meta TYPE fhir.Meta USING meta::fhir.Meta;
+
+
 
 
 commit;
