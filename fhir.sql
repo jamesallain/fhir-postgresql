@@ -453,7 +453,7 @@ create table fhir.AllergryIntolerance (
   clinicalStatus          text, --code
   verificationStatus      text, --code
   type                    text, --code
-  category                text, --code
+  category                text[], --code
   criticality             text, --code
   code                    text,
   patient                 text,
@@ -486,10 +486,58 @@ ALTER TABLE fhir.AllergryIntolerance ALTER COLUMN onsetRange TYPE fhir.Range USI
 ALTER TABLE fhir.AllergryIntolerance ALTER COLUMN recorder TYPE fhir.Reference USING recorder::fhir.Reference;
 ALTER TABLE fhir.AllergryIntolerance ALTER COLUMN aserter TYPE fhir.Reference USING aserter::fhir.Reference;
 
-ALTER TABLE fhir.AllergryIntolerance ALTER COLUMN note TYPE fhir.Annotation USING note::fhir.Annotation;
-ALTER TABLE fhir.AllergryIntolerance ALTER COLUMN reaction TYPE fhir.Reaction USING reaction::fhir.Reaction;
+ALTER TABLE fhir.AllergryIntolerance ALTER COLUMN note TYPE fhir.Annotation[] USING note::fhir.Annotation[];
+ALTER TABLE fhir.AllergryIntolerance ALTER COLUMN reaction TYPE fhir.Reaction[] USING reaction::fhir.Reaction[];
 
 
+--Encounter
+create table fhir.Encounter (
+  encounter_id            serial primary key, 
+
+  identifier              text,
+  status                  text, --code
+  statusHistory           text, --statusHistory
+  class                   text, --code
+  classHistory            text, --classHistory
+  type                    text, --code
+  priority                text,
+  subject                 text,
+  episodeOfCare           text, 
+  incomingReferral        text,
+  participant             text, --participant
+  appointment             text,
+  period                  text,
+  length                  text,
+  reason                  text,
+  diagnosis               text, --diagnosis
+  account                 text, 
+  hospitalization         text, --hospitalization
+  location                text, --location
+  serviceProvider         text,
+  partOf                  text,
+
+  id                   text, --start
+  fullUrl              text,
+  resourceType         text,
+  meta                 text
+);
+
+ALTER TABLE fhir.Encounter ALTER COLUMN identifier TYPE fhir.Identifier[] USING identifier::fhir.identifier[];
+
+
+ALTER TABLE fhir.Encounter ALTER COLUMN type TYPE fhir.CodeableConcept[] USING type::fhir.CodeableConcept[];
+ALTER TABLE fhir.Encounter ALTER COLUMN priority TYPE fhir.CodeableConcept USING priority::fhir.CodeableConcept;
+
+ALTER TABLE fhir.Encounter ALTER COLUMN subject TYPE fhir.Reference USING subject::fhir.Reference;
+ALTER TABLE fhir.Encounter ALTER COLUMN episodeOfCare TYPE fhir.Reference[] USING episodeOfCare::fhir.Reference[];
+ALTER TABLE fhir.Encounter ALTER COLUMN incomingReferral TYPE fhir.Reference[] USING incomingReferral::fhir.Reference[];
+ALTER TABLE fhir.Encounter ALTER COLUMN appointment TYPE fhir.Reference USING appointment::fhir.Reference;
+ALTER TABLE fhir.Encounter ALTER COLUMN period TYPE fhir.Period USING period::fhir.Period;
+ALTER TABLE fhir.Encounter ALTER COLUMN length TYPE fhir.Duration USING length::fhir.Duration;
+ALTER TABLE fhir.Encounter ALTER COLUMN reason TYPE fhir.CodeableConcept[] USING reason::fhir.CodeableConcept[];
+ALTER TABLE fhir.Encounter ALTER COLUMN account TYPE fhir.Reference USING account::fhir.Reference;
+ALTER TABLE fhir.Encounter ALTER COLUMN serviceProvider TYPE fhir.Reference USING serviceProvider::fhir.Reference;
+ALTER TABLE fhir.Encounter ALTER COLUMN partOf TYPE fhir.Reference USING partOf::fhir.Reference;
 
 --NutritionOrder
 create table fhir.NutritionOrder (
