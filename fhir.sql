@@ -64,12 +64,25 @@ create type fhir.Coding as (
   userSelected boolean
 );
 
+--ClassHistory - element for Encounter
+create type fhir.ClassHistory as (
+  class text,
+  period text
+);
+
 create type fhir.ContactPoint as (
   system text,
   value text,
   use text,
   rank text,  
   period text
+);
+
+--Diagnosis - element for Encounter
+create type fhir.Diagnosis as (
+  condition text,
+  role text,
+  rank text
 );
 
 create type fhir.Duration as (
@@ -107,6 +120,19 @@ create type fhir.High as (
   code text
 );
 
+--Hospitalization - element for Encounter
+create type fhir.Hospitalization as (
+  preAdmissionIdentifier text,
+  origin text,
+  admitScore text,
+  reAdmission text
+  dietPreference text,
+  specialCourtesy text,
+  specialArrangement text,
+  destination text,
+  dischargeDisposition text
+);
+
 create type fhir.Identifier as (
   use text,
   type text,
@@ -114,6 +140,13 @@ create type fhir.Identifier as (
   value text,
   Period text,
   assigner text
+);
+
+--Location - element for Encounter
+create type fhir.Location as (
+  location text,
+  status text,
+  period text
 );
 
 create type fhir.Low as (
@@ -143,6 +176,13 @@ create type fhir.OralDiet as (
   texture text,
   fluidConsistencyType text,
   instruction text
+);
+
+--Participant - element for Encounter
+create type fhir.Participant as (
+  type text,
+  period text,
+  individual text
 );
 
 create type fhir.Period as (
@@ -198,12 +238,18 @@ create type fhir.Repeat as (
 
 create type fhir.SampleData as (
   origin text,
-  Period decimal,
+  period decimal,
   factor decimal,
   lowerLimit decimal,
   upperLimit decimal,
   dimensions integer,
   data text
+);
+
+--StatusHistory - element for Encounter
+create type fhir.StatusHistory as (
+  status text,
+  period text
 );
 
 create type fhir.SimpleQuantity as (
