@@ -6,12 +6,12 @@ f=file
 a=?
 q=?
 
-psql -h localhost -d ncp -U nosh -p 5432 -a -q -f schema.sql 
+psql -h localhost -d fhir -U postgres -p 5432 -a -q -f fhir.sql 
 
-
+On Linux...
 postgraphql \
   --connection postgres://nosh:p@localhost:5432/fhir \
-  --schema fhir \
+  --schema fhir \	
   --export-schema-graphql /home/nosh/Desktop/schema.graphql
   --classic-ids
 
@@ -29,3 +29,13 @@ gql-gen --file schema.json --template flow --out ./typings/ ./src/**/*.ts
 
 Single file
 gql-gen --file schema.json --template typescript --out schema.ts
+	
+
+From Windows PSQL shell
+\i /Users/NoshTeam/Desktop/fhir-postgresql/fhir.sql
+	
+  
+
+On Windows...
+$ postgraphql --export-schema-json c:/Users/NoshTeam/Desktop/schema.json --connection postgres://postgres:postgres@localhost:5432/nosh --schema fhir --classic-ids
+

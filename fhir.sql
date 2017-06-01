@@ -125,7 +125,7 @@ create type fhir.Hospitalization as (
   preAdmissionIdentifier text,
   origin text,
   admitScore text,
-  reAdmission text
+  reAdmission text,
   dietPreference text,
   specialCourtesy text,
   specialArrangement text,
@@ -608,18 +608,18 @@ create table fhir.NutritionOrder (
   meta                   text
 );
 
-ALTER TABLE fhir.nutritionOrder ALTER COLUMN identifier TYPE fhir.Identifier[] USING identifier::fhir.Identifier[];
---ALTER TABLE fhir.nutritionOrder ALTER COLUMN patient TYPE fhir.Patient USING patient::fhir.Patient;
---ALTER TABLE fhir.nutritionOrder ALTER COLUMN encounter TYPE fhir.Encounter USING name::fhir.Encounter;
-ALTER TABLE fhir.nutritionOrder ALTER COLUMN orderer TYPE fhir.Reference USING orderer::fhir.Reference;
---ALTER TABLE fhir.nutritionOrder ALTER COLUMN allergyIntolerance TYPE fhir.AllergryIntolerance USING allergyIntolerance::fhir.AllergryIntolerance;
-ALTER TABLE fhir.nutritionOrder ALTER COLUMN foodPreferenceModifier TYPE fhir.CodeableConcept USING foodPreferenceModifier::fhir.CodeableConcept;
-ALTER TABLE fhir.nutritionOrder ALTER COLUMN excludeFoodModifier TYPE fhir.CodeableConcept USING excludeFoodModifier::fhir.CodeableConcept;
-ALTER TABLE fhir.nutritionOrder ALTER COLUMN oralDiet TYPE fhir.OralDiet USING oralDiet::fhir.OralDiet;
-ALTER TABLE fhir.nutritionOrder ALTER COLUMN supplememt TYPE fhir.Supplement USING supplememt::fhir.Supplement;
-ALTER TABLE fhir.nutritionOrder ALTER COLUMN enteralFormula TYPE fhir.EnteralFormula USING enteralFormula::fhir.EnteralFormula;
+ALTER TABLE fhir.NutritionOrder ALTER COLUMN identifier TYPE fhir.Identifier[] USING identifier::fhir.Identifier[];
+--ALTER TABLE fhir.NutritionOrder ALTER COLUMN patient TYPE fhir.Patient USING patient::fhir.Patient;
+--ALTER TABLE fhir.NutritionOrder ALTER COLUMN encounter TYPE fhir.Encounter USING name::fhir.Encounter;
+ALTER TABLE fhir.NutritionOrder ALTER COLUMN orderer TYPE fhir.Reference USING orderer::fhir.Reference;
+--ALTER TABLE fhir.NutritionOrder ALTER COLUMN allergyIntolerance TYPE fhir.AllergryIntolerance USING allergyIntolerance::fhir.AllergryIntolerance;
+ALTER TABLE fhir.NutritionOrder ALTER COLUMN foodPreferenceModifier TYPE fhir.CodeableConcept USING foodPreferenceModifier::fhir.CodeableConcept;
+ALTER TABLE fhir.NutritionOrder ALTER COLUMN excludeFoodModifier TYPE fhir.CodeableConcept USING excludeFoodModifier::fhir.CodeableConcept;
+ALTER TABLE fhir.NutritionOrder ALTER COLUMN oralDiet TYPE fhir.OralDiet USING oralDiet::fhir.OralDiet;
+ALTER TABLE fhir.NutritionOrder ALTER COLUMN supplememt TYPE fhir.Supplement USING supplememt::fhir.Supplement;
+ALTER TABLE fhir.NutritionOrder ALTER COLUMN enteralFormula TYPE fhir.EnteralFormula USING enteralFormula::fhir.EnteralFormula;
 
-ALTER TABLE fhir.nutritionOrder ALTER COLUMN meta TYPE fhir.Meta USING meta::fhir.Meta;
+ALTER TABLE fhir.NutritionOrder ALTER COLUMN meta TYPE fhir.Meta USING meta::fhir.Meta;
 
 
 
